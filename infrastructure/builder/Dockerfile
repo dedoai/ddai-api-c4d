@@ -1,54 +1,31 @@
-# Define custom function directory
-ARG FUNCTION_DIR="/function"
+# Utilizziamo l'immagine ufficiale di Go per la fase di build
+FROM public.ecr.aws/docker/library/golang:1.20 AS builder
 
-FROM public.ecr.aws/lambda/nodejs:18 as build-image
+# Impostiamo la directory di lavoro
+WORKDIR /app
 
-# Include global arg in this stage of the build
-ARG FUNCTION_DIR
+# Copiamo i file del progetto nella directory di lavoro
+COPY app/ .
 
-# Install build dependencies
-RUN yum update -y && \
-    yum install -y \
-    tar \
-    g++ \
-    make \
-    cmake \
-    unzip \
-    libcurl4-openssl-dev \
-    gzip \
-    autoconf \
-    automake \
-    libtool
+# Compiliamo l'applicazione Go per l'architettura di AWS Lambda
+#RUN GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o main main.go
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o main main.go
 
-# Copy function code
-RUN mkdir -p ${FUNCTION_DIR}
-COPY app/* ${FUNCTION_DIR}/
+# Creiamo una nuova immagine per il deployment
+FROM public.ecr.aws/docker/library/alpine:latest
 
-WORKDIR ${FUNCTION_DIR}
+# Usa apk invece di apt-get o yum per installare pacchetti su Alpine Linux
+RUN apk update && apk add --no-cache \
+    ca-certificates
 
-# Install Node.js dependencies
-RUN npm install
+# Impostiamo la directory di lavoro per Lambda
+WORKDIR /app
 
-# Install the runtime interface client
-RUN npm install aws-lambda-ric
+# Copiamo il binario compilato dalla fase di build
+COPY --from=builder /app/main .
 
-# Grab a fresh slim copy of the image to reduce the final size
-FROM public.ecr.aws/lambda/nodejs:18
+# Impostiamo i permessi di esecuzione per il binario
+RUN chmod +x main
 
-# Required for Node runtimes which use npm@8.6.0+ because
-# by default npm writes logs under /home/.npm and Lambda fs is read-only
-ENV NPM_CONFIG_CACHE=/tmp/.npm
-
-# Include global arg in this stage of the build
-ARG FUNCTION_DIR
-
-# Set working directory to function root directory
-WORKDIR ${FUNCTION_DIR}
-
-# Copy in the built dependencies
-COPY --from=build-image ${FUNCTION_DIR} ${FUNCTION_DIR}
-
-# Set runtime interface client as default command for the container runtime
-ENTRYPOINT ["/usr/local/bin/npx", "aws-lambda-ric"]
-# Pass the name of the function handler as an argument to the runtime
-CMD ["index.handler"]
+# Definiamo l'handler per la Lambda
+CMD ["./main"]
