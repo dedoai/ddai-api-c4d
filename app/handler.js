@@ -3,7 +3,7 @@ const { create } = require('./functions/create')
 const { get } = require('./functions/get')
 const { remove } = require('./functions/remove')
 const { update } = require('./functions/update')
-const { okDTO } = require('./utils')
+const { responseDTO } = require('./utils')
 
 module.exports.handler = async (event) => {
 
@@ -12,20 +12,11 @@ module.exports.handler = async (event) => {
     let result;
 
     if (!checkMethod(method)) {
-        return {
-            statusCode: 405,
-            body: JSON.stringify({
-                message: 'Method not allowed'
-            })
-        }
+        return responseDTO(405, 'Method not allowed')
+
     }
     if (!checkPath(path)) {
-        return {
-            statusCode: 404,
-            body: JSON.stringify({
-                message: 'Path not found'
-            })
-        }
+        return responseDTO(404, 'Path not found')
     }
 
     try {
@@ -33,37 +24,27 @@ module.exports.handler = async (event) => {
             case 'GET':
                 console.log('c4d get request received', JSON.stringify(event.pathParameters))
                 result = await get(event.pathParameters)
-                return okDTO(result)
+                return responseDTO(200, result)
             case 'POST':
                 console.log('c4d create request received', JSON.stringify(event.body))
                 result = await create(event.body)
-                return okDTO(result)
+                return responseDTO(200, result)
             case 'PUT':
                 console.log('c4d update request received', JSON.stringify(event.body))
                 result = await update(event.body)
-                return okDTO(result)
+                return responseDTO(200, result)
             case 'DELETE':
                 console.log('c4d delete request received', JSON.stringify(event.pathParameters))
                 result = await remove(event.pathParameters)
-                return okDTO(result)
+                return responseDTO(200, result)
         }
     }
     catch (err) {
         console.error(err)
         if (err instanceof ApplicationError) {
-            return {
-                statusCode: err.statusCode,
-                body: JSON.stringify({
-                    message: err.message
-                })
-            }
+            return responseDTO(err.statusCode, err.message)
         }
         else
-            return {
-                statusCode: 500,
-                body: JSON.stringify({
-                    message: 'Internal Server Error'
-                })
-            }
+            return responseDTO(500, 'Internal Server Error')
     }
 }

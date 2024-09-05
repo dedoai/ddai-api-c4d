@@ -9,15 +9,15 @@ const checkPath = (path) => {
     return ALLOWED_PATH.includes(path)
 }
 
-const okDTO = (data) => {
+const responseDTO = (statusCode, data) => {
     return {
-        statusCode: 200,
-        body: JSON.stringify(data)
+        statusCode,
+        body: JSON.stringify({ data })
     }
 }
 
 module.exports = {
     checkMethod,
     checkPath,
-    okDTO
+    responseDTO
 }   
