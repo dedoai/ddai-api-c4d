@@ -1,0 +1,65 @@
+const Joi = require('joi');
+const ApplicationError = require('./ApplicationError');
+const createDTO = Joi.object({
+    consumerId: Joi.string().required(),
+    title: Joi.string().required(),
+    description: Joi.string(),
+    dataType: Joi.string().required(),
+    reward: Joi.number().min(0).required(),
+    status: Joi.string().valid('open', 'closed').default('open')
+}).not(null);
+
+
+
+const updateDTO = Joi.object({
+    id: Joi.string().required(),
+    title: Joi.string().required(),
+    description: Joi.string()
+}).not(null);
+
+const deleteDTO = Joi.object({
+    id: Joi.string().required()
+}).not(null);
+
+const getDTO = Joi.object({
+    id: Joi.string().optional()
+})
+
+
+const validateCreateDTO = (dto) => {
+    const { error, value } = createDTO.validate(dto);
+    if (error) {
+        throw new ApplicationError('Invalid input', 400, error.details[0].message);
+    }
+    return value
+}
+
+const validateUpdateDTO = (dto) => {
+    const { error, value } = updateDTO.validate(dto);
+    if (error) {
+        throw new ApplicationError('Invalid input', 400, error.details[0].message);
+    }
+    return value
+}
+
+const validateRemoveDTO = (dto) => {
+    const { error, value } = deleteDTO.validate(dto);
+    if (error) {
+        throw new ApplicationError('Invalid input', 400, error.details[0].message);
+    }
+    return value
+}
+
+const validateGetDTO = (dto) => {
+    const { error, value } = getDTO.validate(dto);
+    if (error) {
+        throw new ApplicationError('Invalid input', 400, error.details[0].message);
+    }
+    return value
+}
+module.exports = {
+    validateCreateDTO,
+    validateUpdateDTO,
+    validateRemoveDTO,
+    validateGetDTO
+};
