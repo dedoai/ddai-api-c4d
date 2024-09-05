@@ -1,23 +1,16 @@
-const { checkMethod, checkPath } = require('../utils')
+const { checkMethod, checkPath } = require('./utils')
 const { create } = require('./functions/create')
 const { get } = require('./functions/get')
 const { remove } = require('./functions/remove')
 const { update } = require('./functions/update')
 const { responseDTO } = require('./utils')
+const ApplicationError = require('./ApplicationError')
 
 module.exports.handler = async (event) => {
 
     const { http } = event.requestContext
-    const { method, path } = http
+    const { method } = http
     let result;
-
-    if (!checkMethod(method)) {
-        return responseDTO(405, 'Method not allowed')
-
-    }
-    if (!checkPath(path)) {
-        return responseDTO(404, 'Path not found')
-    }
 
     try {
         switch (method) {
@@ -30,13 +23,15 @@ module.exports.handler = async (event) => {
                 result = await create(event.body)
                 return responseDTO(200, result)
             case 'PUT':
-                console.log('c4d update request received', JSON.stringify(event.body))
-                result = await update(event.body)
+                console.log('c4d update request received', JSON.stringify({ ...event.body, ...event.pathParameters }))
+                result = await update({ ...event.body, ...event.pathParameters })
                 return responseDTO(200, result)
             case 'DELETE':
                 console.log('c4d delete request received', JSON.stringify(event.pathParameters))
                 result = await remove(event.pathParameters)
                 return responseDTO(200, result)
+            default:
+                return responseDTO(405, 'Method not allowed')
         }
     }
     catch (err) {

@@ -2,14 +2,16 @@ const { getDbConnection } = require('../db')
 const { validateGetDTO } = require('../validators')
 
 const get = async (getDTO) => {
-    const value = validateCreateDTO(getDTO);
+    const value = validateGetDTO(getDTO);
     const { id } = value
     const db = await getDbConnection()
-    const query = 'SELECT * FROM c4d'
+    let query = 'SELECT * FROM c4d'
+    let result;
     if (id) {
         query += ' WHERE id = $1'
+        result = await db.query(query, [id])
     }
-    const result = await db.query(query, [id])
+    else result = await db.query(query)
     return result.rows
 }
 

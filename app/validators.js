@@ -4,25 +4,25 @@ const createDTO = Joi.object({
     consumerId: Joi.string().required(),
     title: Joi.string().required(),
     description: Joi.string(),
-    dataType: Joi.string().required(),
+    data_type: Joi.string().required(),
     reward: Joi.number().min(0).required(),
     status: Joi.string().valid('open', 'closed').default('open')
-}).not(null);
+}).not(null)
 
 
 
 const updateDTO = Joi.object({
-    id: Joi.string().required(),
+    id: Joi.string().uuid().required(),
     title: Joi.string().required(),
     description: Joi.string()
 }).not(null);
 
 const deleteDTO = Joi.object({
-    id: Joi.string().required()
+    id: Joi.string().uuid().required()
 }).not(null);
 
 const getDTO = Joi.object({
-    id: Joi.string().optional()
+    id: Joi.string().uuid().optional()
 })
 
 
