@@ -1,4 +1,3 @@
-const { checkMethod, checkPath } = require('./utils')
 const { create } = require('./functions/create')
 const { get } = require('./functions/get')
 const { remove } = require('./functions/remove')
