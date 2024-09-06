@@ -1,4 +1,4 @@
-FROM public.ecr.aws/docker/library/node:20
+FROM public.ecr.aws/lambda/nodejs:20
 WORKDIR /app
 COPY app/ .
 WORKDIR /app
