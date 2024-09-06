@@ -23,13 +23,13 @@ const deleteDTO = Joi.object({
 
 const getDTO = Joi.object({
     id: Joi.string().uuid().optional()
-})
+}).optional()
 
 
 const validateCreateDTO = (dto) => {
     const { error, value } = createDTO.validate(dto);
     if (error) {
-        throw new ApplicationError('Invalid input', 400, error.details[0].message);
+        throw new ApplicationError('Invalid input\r\n' + error.details[0].message, 400);
     }
     return value
 }
@@ -37,7 +37,7 @@ const validateCreateDTO = (dto) => {
 const validateUpdateDTO = (dto) => {
     const { error, value } = updateDTO.validate(dto);
     if (error) {
-        throw new ApplicationError('Invalid input', 400, error.details[0].message);
+        throw new ApplicationError('Invalid input\r\n' + error.details[0].message, 400);
     }
     return value
 }
@@ -45,7 +45,7 @@ const validateUpdateDTO = (dto) => {
 const validateRemoveDTO = (dto) => {
     const { error, value } = deleteDTO.validate(dto);
     if (error) {
-        throw new ApplicationError('Invalid input', 400, error.details[0].message);
+        throw new ApplicationError('Invalid input\r\n' + error.details[0].message, 400);
     }
     return value
 }
@@ -53,7 +53,7 @@ const validateRemoveDTO = (dto) => {
 const validateGetDTO = (dto) => {
     const { error, value } = getDTO.validate(dto);
     if (error) {
-        throw new ApplicationError('Invalid input', 400, error.details[0].message);
+        throw new ApplicationError('Invalid input\r\n' + error.details[0].message, 400);
     }
     return value
 }
