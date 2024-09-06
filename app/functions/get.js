@@ -3,7 +3,7 @@ const { validateGetDTO } = require('../validators')
 
 const get = async (getDTO) => {
     const value = validateGetDTO(getDTO);
-    const { id } = value
+    const id = value?.id
     const db = await getDbConnection()
     let query = 'SELECT * FROM c4d'
     let result;

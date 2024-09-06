@@ -23,7 +23,7 @@ const deleteDTO = Joi.object({
 
 const getDTO = Joi.object({
     id: Joi.string().uuid().optional()
-}).optional()
+}).optional().allow(null)
 
 
 const validateCreateDTO = (dto) => {
