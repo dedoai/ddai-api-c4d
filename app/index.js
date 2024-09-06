@@ -6,18 +6,11 @@ const { responseDTO } = require('./utils')
 const ApplicationError = require('./ApplicationError')
 exports.handler = async (event) => {
 
-    console.log('c4d request received', JSON.stringify(event))
-    return {
-        statusCode: 200,
-        body: JSON.stringify({ event })
-    }
-    /*
-    const { http } = event.requestContext
-    const { method } = http
+    const { httpMethod } = event.requestContext
     let result;
 
     try {
-        switch (method) {
+        switch (httpMethod) {
             case 'GET':
                 console.log('c4d get request received', JSON.stringify(event.pathParameters))
                 result = await get(event.pathParameters)
@@ -46,5 +39,4 @@ exports.handler = async (event) => {
         else
             return responseDTO(500, 'Internal Server Error')
     }
-            */
 }
