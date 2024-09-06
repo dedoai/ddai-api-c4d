@@ -32,7 +32,10 @@ exports.handler = async (event) => {
         }
     }
     catch (err) {
-        console.error(err)
+        console.log('----------------------EXCEPTION OCCURRED----------------------')
+        console.log(JSON.stringify(err))
+        console.log(err.message)
+        console.log('----------------------EXCEPTION END---------------------------')
         if (err instanceof ApplicationError) {
             return responseDTO(err.statusCode, err.message)
         }
