@@ -21,9 +21,6 @@ const getDbSecretPwd = async () => {
     return response?.SecretString;
 }
 
-
-const secret = response.SecretString;
-
 module.exports = {
     responseDTO,
     getDbSecretPwd

@@ -4,9 +4,7 @@ const { remove } = require('./functions/remove')
 const { update } = require('./functions/update')
 const { responseDTO } = require('./utils')
 const ApplicationError = require('./ApplicationError')
-
-module.exports.handler = async (event) => {
-
+exports.handler = async (event) => {
     const { http } = event.requestContext
     const { method } = http
     let result;
