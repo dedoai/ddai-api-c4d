@@ -12,7 +12,7 @@ const get = async (getDTO) => {
         result = await db.query(query, [id])
     }
     else result = await db.query(query)
-    return result.rows
+    return result.rows.length === 1 ? result.rows[0] : result.rows
 }
 
 module.exports = {
