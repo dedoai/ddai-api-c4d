@@ -1,21 +1,25 @@
 const { validateCreateDTO } = require('../validators')
 const { getDbConnection } = require('../db')
-
-const { v4: uuidv4 } = require('uuid');
-
+const { addFile } = require('./addFile')
+const ENTITY_NAME = 'c4d'
 const create = async (createDTO) => {
-    const value = validateCreateDTO(createDTO);
-    const { consumerId, title, description, data_type, reward, status } = value;
-    const id = uuidv4();
-    const query = `
-      INSERT INTO c4d (id, consumerId, title, description, data_type, reward, status,created_at)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+  const value = validateCreateDTO(createDTO);
+  const { consumer_id, title, description, data_type, reward, status, files } = value;
+  const query = `
+      INSERT INTO c4d (consumer_id, title, description, data_type, reward, status)
+      VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING *`;
-    const values = [id, consumerId, title, description, data_type, reward, status, new Date()];
-    const result = await getDbConnection().query(query, values);
-    return result.rows[0]
-}
+  const values = [consumer_id, title, description, data_type, reward, status];
+  const c4d = await getDbConnection().query(query, values);
 
+  const insertFilePromises = []
+  for (const file of files) {
+    insertFilePromises.push(addFile({ ...file, entity_name: ENTITY_NAME, entity_id: c4d.rows[0].id }))
+  }
+  if (insertFilePromises.length > 0)
+    await Promise.all(insertFilePromises)
+  return c4d.rows[0]
+}
 module.exports = {
-    create
+  create
 };

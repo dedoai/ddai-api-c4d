@@ -1,28 +1,33 @@
 const Joi = require('joi');
 const ApplicationError = require('./ApplicationError');
 const createDTO = Joi.object({
-    consumerId: Joi.string().required(),
+    consumer_id: Joi.string().required(),
     title: Joi.string().required(),
     description: Joi.string(),
     data_type: Joi.string().required(),
     reward: Joi.number().min(0).required(),
-    status: Joi.string().valid('open', 'closed').default('open')
+    status: Joi.string().valid('open', 'closed').default('open'),
+    files: Joi.array().items(Joi.object({
+        file_name: Joi.string().required(),
+        file_type: Joi.string().required(),
+        bucket_url: Joi.string().required()
+    })).optional().allow(null)
 }).not(null)
 
 
 
 const updateDTO = Joi.object({
-    id: Joi.string().uuid().required(),
+    id: Joi.number().min(1).required(),
     title: Joi.string().required(),
     description: Joi.string()
 }).not(null);
 
 const deleteDTO = Joi.object({
-    id: Joi.string().uuid().required()
+    id: Joi.number().min(1).required()
 }).not(null);
 
 const getDTO = Joi.object({
-    id: Joi.string().uuid().optional()
+    id: Joi.number().min(1).optional()
 }).optional().allow(null)
 
 
