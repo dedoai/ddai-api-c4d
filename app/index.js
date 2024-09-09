@@ -1,5 +1,6 @@
 const { create } = require('./functions/create')
 const { get } = require('./functions/get')
+const { getFiles } = require('./functions/getFiles')
 const { remove } = require('./functions/remove')
 const { update } = require('./functions/update')
 const { responseDTO } = require('./utils')
@@ -12,8 +13,12 @@ exports.handler = async (event) => {
     try {
         switch (httpMethod) {
             case 'GET':
-                console.log('c4d get request received', JSON.stringify(event.pathParameters))
-                result = await get(event.pathParameters)
+                console.log('c4d get request received', JSON.stringify({ ...event.pathParameters, ...event.queryStringParameters }))
+
+                if (Object.keys(event.pathParameters).includes('files'))
+                    result = await getFiles(event.pathParameters)
+                else
+                    result = await get({ ...event.pathParameters, ...event.queryStringParameters })
                 return responseDTO(200, result)
             case 'POST':
                 console.log('c4d create request received', JSON.stringify(event.body))

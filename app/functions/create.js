@@ -4,12 +4,12 @@ const { addFile } = require('./addFile')
 const ENTITY_NAME = 'c4d'
 const create = async (createDTO) => {
   const value = validateCreateDTO(createDTO);
-  const { consumer_id, title, description, data_type, reward, status, files } = value;
+  const { consumer_id, title, description, data_type, reward, status, files, category_id } = value;
   const query = `
-      INSERT INTO c4d (consumer_id, title, description, data_type, reward, status)
-      VALUES ($1, $2, $3, $4, $5, $6)
+      INSERT INTO c4d (consumer_id, title, description, data_type, reward, status, category_id)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
       RETURNING *`;
-  const values = [consumer_id, title, description, data_type, reward, status];
+  const values = [consumer_id, title, description, data_type, reward, status, category_id];
   const c4d = await getDbConnection().query(query, values);
 
   const insertFilePromises = []

@@ -11,7 +11,10 @@ const get = async (getDTO) => {
         query += ' WHERE id = $1'
         result = await db.query(query, [id])
     }
-    else result = await db.query(query)
+    else {
+        query += ' OFFSET $1 LIMIT $2'
+        result = await db.query(query, [value?.offset, value?.limit])
+    }
     return result.rows.length === 1 ? result.rows[0] : result.rows
 }
 
