@@ -16,7 +16,7 @@ exports.handler = async (event) => {
                 console.log('c4d get request received', JSON.stringify({ ...event.pathParameters, ...event.queryStringParameters }))
 
                 if (Object.keys(event.pathParameters).includes('files'))
-                    result = await getFiles(event.pathParameters)
+                    result = await getFiles({ ...event.pathParameters, ...event.queryStringParameters })
                 else
                     result = await get({ ...event.pathParameters, ...event.queryStringParameters })
                 return responseDTO(200, result)

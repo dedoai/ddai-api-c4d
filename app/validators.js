@@ -32,12 +32,14 @@ const deleteDTO = Joi.object({
 const getDTO = Joi.object({
     id: Joi.number().min(1).optional(),
     offset: Joi.number().min(0).optional().default(0),
-    limit: Joi.number().min(1).optional().default(20),
+    limit: Joi.number().min(1).optional().default(20)
 }).optional().allow(null)
 
 const getFilesDTO = Joi.object({
     id: Joi.number().min(1).required(),
     files: Joi.string().required().valid('files').default('files'),
+    offset: Joi.number().min(0).optional().default(0),
+    limit: Joi.number().min(1).optional().default(20)
 }).optional().allow(null)
 
 
