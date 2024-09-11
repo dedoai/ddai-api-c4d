@@ -5,12 +5,16 @@ const {
 
 const client = new SecretsManagerClient();
 
-const responseDTO = (statusCode, data) => {
-    return {
-        statusCode,
-        body: JSON.stringify({ data })
-    }
-}
+const responseDTO = (statusCode = 200, body = {}, headers = {}) => ({
+    statusCode: statusCode,
+    headers: {
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "*",
+        ...headers
+    },
+    body: JSON.stringify(body)
+})
 
 const getDbSecretPwd = async () => {
     const command = new GetSecretValueCommand({ SecretId: process.env.DB_SECRET_PASS_ID })
