@@ -5,7 +5,7 @@ const { remove } = require('./functions/remove')
 const { update } = require('./functions/update')
 const { responseDTO } = require('./utils')
 const ApplicationError = require('./ApplicationError')
-exports.handler = async (event) => {
+const handler = async (event) => {
 
     const { httpMethod } = event.requestContext
     let result;
@@ -15,7 +15,7 @@ exports.handler = async (event) => {
             case 'GET':
                 console.log('c4d get request received', JSON.stringify({ ...event.pathParameters, ...event.queryStringParameters }))
 
-                if (Object.keys(event.pathParameters).includes('files'))
+                if (event.pathParameters && Object.keys(event.pathParameters).includes('files'))
                     result = await getFiles({ ...event.pathParameters, ...event.queryStringParameters })
                 else
                     result = await get({ ...event.pathParameters, ...event.queryStringParameters })
@@ -48,3 +48,6 @@ exports.handler = async (event) => {
             return responseDTO(500, 'Internal Server Error')
     }
 }
+
+
+handler({ requestContext: { httpMethod: 'GET' } })
