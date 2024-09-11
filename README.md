@@ -1,64 +1,158 @@
-Welcome to the AWS CodeStar sample web application
-==================================================
+# ddai-api-lambda
 
-This sample code helps get you started with a simple Node.js web service deployed by AWS CloudFormation to AWS Lambda and Amazon API Gateway.
+![Node.js](https://img.shields.io/badge/Node.js-14.x-green)
+![AWS Lambda](https://img.shields.io/badge/AWS-Lambda-yellow)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-What's Here
------------
+**dedoAI** - Call for Data API Service
 
-This sample includes:
+---
 
-* README.md - this file
-* buildspec.yml - this file is used by AWS CodeBuild to package your
-  application for deployment to AWS Lambda
-* index.js - this file contains the sample Node.js code for the web service
-* template.yml - this file contains the AWS Serverless Application Model (AWS SAM) used
-  by AWS CloudFormation to deploy your application to AWS Lambda and Amazon API
-  Gateway.
-* tests/ - this directory contains unit tests for your application
-* template-configuration.json - this file contains the project ARN with placeholders used for tagging resources with the project ID
+## Overview
 
-What Do I Do Next?
-------------------
+This repository contains the `ddai-api-lambda` service, a Dockerized AWS Lambda function that exposes a set of APIs for managing "Call for Data" entities. This API allows creating, retrieving, updating, and deleting Call for Data entries, as well as managing associated files. The service is designed for scalability and can be easily integrated with other dedoAI services.
 
-If you have checked out a local copy of your repository you can start making
-changes to the sample code.  We suggest making a small change to index.js first,
-so you can see how changes pushed to your project's repository are automatically
-picked up by your project pipeline and deployed to AWS Lambda and Amazon API Gateway.
-(You can watch the pipeline progress on your AWS CodeStar project dashboard.)
-Once you've seen how that works, start developing your own code, and have fun!
+---
 
-To run your tests locally, go to the root directory of the
-sample code and run the `npm test` command, which
-AWS CodeBuild also runs through your `buildspec.yml` file.
+## Features
 
-To test your new code during the release process, modify the existing tests or
-add tests to the tests directory. AWS CodeBuild will run the tests during the
-build stage of your project pipeline. You can find the test results
-in the AWS CodeBuild console.
+- **Call for Data Management**: Full CRUD operations for managing "Call for Data" entities.
+- **File Management**: Supports uploading, retrieving, and deleting files associated with Call for Data entries.
+- **PostgreSQL Integration**: The service connects to a PostgreSQL database for data persistence.
+- **Dockerized**: Packaged as a Docker container for seamless deployment.
+- **AWS Lambda**: Leveraging the power of AWS Lambda for a serverless architecture.
 
-Learn more about AWS CodeBuild and how it builds and tests your application here:
-https://docs.aws.amazon.com/codebuild/latest/userguide/concepts.html
+---
 
-Learn more about AWS Serverless Application Model (AWS SAM) and how it works here:
-https://github.com/awslabs/serverless-application-model/blob/master/HOWTO.md
+## Technologies
 
-AWS Lambda Developer Guide:
-https://docs.aws.amazon.com/lambda/latest/dg/deploying-lambda-apps.html
+- **Node.js**: The core backend logic is written in Node.js.
+- **AWS Lambda**: Serverless compute service used to handle API requests.
+- **PostgreSQL**: Database for persisting Call for Data and file information.
+- **Docker**: Containerization for easy deployment.
+- **Joi Validation**: Input validation for robust and secure data handling.
 
-Learn more about AWS CodeStar by reading the user guide, and post questions and
-comments about AWS CodeStar on our forum.
+---
 
-User Guide: https://docs.aws.amazon.com/codestar/latest/userguide/welcome.html
+## API Endpoints
 
-Forum: https://forums.aws.amazon.com/forum.jspa?forumID=248
+The following APIs are exposed by the service:
 
-What Should I Do Before Running My Project in Production?
-------------------
+| Method | Endpoint                 | Description                            |
+|--------|--------------------------|----------------------------------------|
+| GET    | `/c4d`                   | Retrieve Call for Data entries         |
+| GET    | `/c4d/files`             | Retrieve associated files              |
+| POST   | `/c4d`                   | Create a new Call for Data entry       |
+| PUT    | `/c4d/{id}`              | Update an existing Call for Data entry |
+| DELETE | `/c4d/{id}`              | Delete a Call for Data entry           |
+| DELETE | `/c4d/files/{fileId}`     | Remove a file from Call for Data entry |
 
-AWS recommends you review the security best practices recommended by the framework
-author of your selected sample application before running it in production. You
-should also regularly review and apply any available patches or associated security
-advisories for dependencies used within your application.
+### Example Request
 
-Best Practices: https://docs.aws.amazon.com/codestar/latest/userguide/best-practices.html?icmpid=docs_acs_rm_sec
+```bash
+curl -X POST "https://your-api-endpoint/c4d" \
+-H "Content-Type: application/json" \
+-d '{"title": "New Call for Data", "description": "Request for data", "consumer_id": 1, "category_id": 2, "data_type": "json", "reward": 100}'
+```
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+To run or contribute to this project, you will need:
+
+- **Node.js** (version 14.x or higher)
+- **AWS CLI**: To interact with AWS services.
+- **Docker**: Required for running and packaging the Lambda function.
+
+### Setup Instructions
+
+1. Clone the repository:
+
+    ```bash
+    git clone https://github.com/dedoAI/ddai-api-lambda.git
+    cd ddai-api-lambda
+    ```
+
+2. Install dependencies:
+
+    ```bash
+    npm install
+    ```
+
+3. Build and run the Docker container:
+
+    ```bash
+    docker build -t ddai-api-lambda .
+    docker run -p 3000:3000 ddai-api-lambda
+    ```
+
+4. The API will be available at `http://localhost:3000`.
+
+---
+
+## Database Integration
+
+This service interacts with a PostgreSQL database to store and retrieve Call for Data and file information. Database credentials are managed through environment variables, and the connection is handled in the `db.js` file.
+
+### Sample Query
+
+- To retrieve all files associated with a Call for Data entry:
+
+```js
+const query = 'SELECT file_name, file_type, bucket_url FROM files WHERE entity_id = $1 and entity_name = $2';
+```
+
+---
+
+## Deployment
+
+This Lambda function can be deployed using Docker and AWS services. To deploy:
+
+1. Build the Docker image:
+
+    ```bash
+    docker build -t ddai-api-lambda .
+    ```
+
+2. Push the Docker image to an AWS ECR repository:
+
+    ```bash
+    docker tag ddai-api-lambda:latest 123456789012.dkr.ecr.region.amazonaws.com/ddai-api-lambda:latest
+    docker push 123456789012.dkr.ecr.region.amazonaws.com/ddai-api-lambda:latest
+    ```
+
+3. Deploy the Lambda function using AWS CLI or CloudFormation.
+
+---
+
+## Testing
+
+To run unit tests for this service, use the following command:
+
+```bash
+npm test
+```
+
+You can also test the Lambda function locally using Docker:
+
+```bash
+docker run -p 3000:3000 ddai-api-lambda
+```
+
+---
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## Contact
+
+For more information about dedoAI or to get in touch with the team:
+
+- **Website**: [dedo.org](https://www.dedo.org)
+- **Email**: support@dedo.org
