@@ -17,7 +17,7 @@ const getDbSecretPwd = async () => {
     const response = await client.send(command);
     if (!response?.SecretString)
         throw new Error('Failed to get secret ')
-
+    console.log('getDbSecretPwd:' + response)
     return JSON.parse(response?.SecretString).password
 }
 

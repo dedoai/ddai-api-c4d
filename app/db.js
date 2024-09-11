@@ -2,6 +2,7 @@ const { Pool } = require('pg');
 const { getDbSecretPwd } = require('./utils')
 
 const getDbConnection = async () => {
+    console.log('getDbConnection')
     const pwd = await getDbSecretPwd()
     return new Pool({
         user: process.env.DB_USER,
