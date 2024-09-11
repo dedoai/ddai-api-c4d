@@ -5,7 +5,7 @@ const { remove } = require('./functions/remove')
 const { update } = require('./functions/update')
 const { responseDTO } = require('./utils')
 const ApplicationError = require('./ApplicationError')
-const handler = async (event) => {
+exports.handler = async (event) => {
 
     const { httpMethod } = event.requestContext
     let result;
@@ -48,6 +48,3 @@ const handler = async (event) => {
             return responseDTO(500, 'Internal Server Error')
     }
 }
-
-
-handler({ requestContext: { httpMethod: 'GET' } })
