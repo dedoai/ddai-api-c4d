@@ -15,7 +15,7 @@ const get = async (getDTO) => {
         query += ' OFFSET $1 LIMIT $2'
         result = await db.query(query, [value?.offset, value?.limit])
     }
-    return result.rows.length === 1 ? result.rows[0] : result.rows
+    return id ? result.rows.pop() : result.rows
 }
 
 module.exports = {
