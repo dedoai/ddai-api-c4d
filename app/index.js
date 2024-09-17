@@ -1,5 +1,6 @@
 const { create } = require('./functions/create')
 const { get } = require('./functions/get')
+const { full } = require('./functions/full')
 const { getFiles } = require('./functions/getFiles')
 const { remove } = require('./functions/remove')
 const { update } = require('./functions/update')
@@ -17,6 +18,8 @@ exports.handler = async (event) => {
 
                 if (event.pathParameters && Object.keys(event.pathParameters).includes('files'))
                     result = await getFiles({ ...event.pathParameters, ...event.queryStringParameters })
+                else if (event.pathParameters && Object.keys(event.pathParameters).includes('full'))
+                    result = await full(...event.queryStringParameters)
                 else
                     result = await get({ ...event.pathParameters, ...event.queryStringParameters })
                 return responseDTO(200, result)
