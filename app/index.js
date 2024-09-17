@@ -24,7 +24,7 @@ const handler = async (event) => {
                 result = await update(event.body)
                 return responseDTO(200, result)
             case 'DELETE':
-                console.log('c4d delete request received', JSON.stringify(event.pathParameters))
+                console.log('c4d delete request received', JSON.stringify(event.queryStringParameters))
                 result = await remove(event.queryStringParameters)
                 return responseDTO(200, result)
             default:
