@@ -43,14 +43,3 @@ const handler = async (event) => {
             return responseDTO(500, 'Internal Server Error')
     }
 }
-
-const event = {
-    requestContext: {
-
-        "resource": "/v1/c4d", "path": "/v1/c4d", "httpMethod": "GET", "headers": null, "multiValueHeaders": null, "multiValueQueryStringParameters": { "a": ["1"] }, "pathParameters": null, "stageVariables": null, "requestContext": {
-            "resourceId": "rn3ezu", "resourcePath": "/v1/c4d", "httpMethod": "POST", "extendedRequestId": "eP8mpFsJoAMFVCA=", "requestTime": "17/Sep/2024:12:22:40 +0000", "path": "/v1/c4d", "accountId": "381492109137", "protocol": "HTTP/1.1", "stage": "test-invoke-stage", "domainPrefix": "testPrefix", "requestTimeEpoch": 1726575760625, "requestId": "308baf38-45ef-44a0-a3af-5f78eb289b80"
-        }
-    },
-    "queryStringParameters": { "id": "bd173750-8d5a-4815-a8b0-d6d00902853a", files: true },
-}
-handler(event)
