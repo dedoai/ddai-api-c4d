@@ -20,6 +20,7 @@ const full = async (id) => {
         inner join users us on ${ENTITY_NAME}.consumer_id = us.id WHERE ${ENTITY_NAME}.id = $1`
 
     result = await db.query(query, [id])
+    await db.end()
     return id ? result.rows.pop() : result.rows
 }
 

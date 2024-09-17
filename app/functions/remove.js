@@ -1,12 +1,12 @@
-const { validateRemoveDTO } = require('../validators')
 const { getDbConnection } = require('../db')
-const ENTITY_NAME = 'c4d';
+const { ENTITY_NAME } = require('../constants')
 
-const remove = async (removeDTO) => {
-  const value = validateRemoveDTO(removeDTO);
-  const { id } = value;
+const remove = async (input) => {
+  const { id } = input;
+  const db = await getDbConnection()
   const query = `DELETE FROM ${ENTITY_NAME} WHERE id = $1 RETURNING id`;
-  const result = await (await getDbConnection()).query(query, [id]);
+  const result = await db.query(query, [id]);
+  await db.end()
   return result.rowCount > 0;
 }
 
