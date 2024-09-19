@@ -9,11 +9,7 @@ const getDTO = Joi.object({
         then: Joi.boolean().optional().default(false),
         otherwise: Joi.forbidden()
     }),
-    full: Joi.boolean().optional().default(false).when('id', {
-        is: Joi.exist(),
-        then: Joi.boolean().optional().default(false),
-        otherwise: Joi.forbidden()
-    })
+    full: Joi.boolean().optional().default(false)
 }).optional().allow(null);
 
 module.exports = {
