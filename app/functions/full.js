@@ -17,9 +17,15 @@ const full = async (id) => {
         us.username as owner
         FROM public.${ENTITY_NAME} ${ENTITY_NAME}
         inner join categories cat on ${ENTITY_NAME}.category_id = cat.id 
-        inner join users us on ${ENTITY_NAME}.consumer_id = us.id WHERE ${ENTITY_NAME}.id = $1`
+        inner join users us on ${ENTITY_NAME}.consumer_id = us.id`
 
-    result = await db.query(query, [id])
+    if (id) {
+        query += ` WHERE ${ENTITY_NAME}.id = $1`
+        result = await db.query(query, [id])
+    }
+    else {
+        result = await db.query(query)
+    }
     await db.end()
     return id ? result.rows.pop() : result.rows
 }
