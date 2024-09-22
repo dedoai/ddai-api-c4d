@@ -17,7 +17,7 @@ exports.handler = async (event) => {
     try {
         switch (httpMethod) {
             case 'GET':
-                console.log(`get request received with params: `, JSON.stringify(event.queryStringParameters))
+                console.log(`get request received with params: `, JSON.stringify(event))
                 validatedInput = validate(event.queryStringParameters, getDTO)
                 result = await get(validatedInput)
                 return responseDTO(200, result)
