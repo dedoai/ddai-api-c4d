@@ -1,6 +1,6 @@
 const Joi = require('joi');
 const createDTO = Joi.object({
-    consumer_id: Joi.string().guid().required(),
+    user_id: Joi.string().guid().required(),
     category_id: Joi.string().guid().required(),
     title: Joi.string().required(),
     description: Joi.string().optional(),

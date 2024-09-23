@@ -6,26 +6,27 @@ const { ENTITY_NAME } = require('../constants')
 
 const get = async (input) => {
     let result;
-
+    const params = [input.user_id]
     const id = input?.id
     if (input?.full) {
-        result = await full(id, input?.limit, input?.offset)
+        result = await full(id, user_id, input?.limit, input?.offset)
         return result
     }
     if (input?.files) {
-        result = await files(id, input?.limit, input?.offset)
+        result = await files(id, user_id, input?.limit, input?.offset)
         return result
     }
     const db = await getDbConnection()
-    let query = `SELECT * FROM ${ENTITY_NAME}`
+    let query = `SELECT * FROM ${ENTITY_NAME} WHERE user_id = $1`
 
     if (id) {
-        query += ` WHERE id = $1`
-        result = await db.query(query, [id])
+        query += ` AND id = $2`
+        result = await db.query(query, params.push(id))
     }
     else {
-        query += ` OFFSET $1 LIMIT $2`
-        result = await db.query(query, [input?.offset || MAX_OFFSET, input?.limit || MAX_LIMIT])
+        query += ` OFFSET $2 LIMIT $3`
+        params.push(input?.offset || MAX_OFFSET, input?.limit || MAX_LIMIT)
+        result = await db.query(query, params)
     }
     await db.end();
     return id ? result.rows.pop() : result.rows
