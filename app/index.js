@@ -17,24 +17,24 @@ exports.handler = async (event) => {
     try {
         switch (httpMethod) {
             case 'GET':
-                console.log(`get request received with params: `, JSON.stringify({ ...event.queryStringParameters, userId: authorizer.principalId }))
-                validatedInput = validate({ ...event.queryStringParameters, userId: authorizer.principalId }, getDTO)
+                console.log(`get request received with params: `, JSON.stringify({ ...event.queryStringParameters, user_id: authorizer.principalId }))
+                validatedInput = validate({ ...event.queryStringParameters, user_id: authorizer.principalId }, getDTO)
                 result = await get(validatedInput)
                 return responseDTO(200, result)
             case 'POST':
-                console.log(`create request received with params: `, JSON.stringify({ ...event.body, userId: authorizer.principalId }))
-                validatedInput = validate({ ...event.body, userId: authorizer.principalId }, createDTO)
+                console.log(`create request received with params: `, JSON.stringify({ ...event.body, user_id: authorizer.principalId }))
+                validatedInput = validate({ ...event.body, user_id: authorizer.principalId }, createDTO)
                 result = await create(validatedInput)
                 return responseDTO(200, result)
             case 'PUT':
-                console.log(`update request received with params: `, JSON.stringify({ ...event.body, userId: authorizer.principalId }))
-                validatedInput = validate({ ...event.body, userId: authorizer.principalId }, updateDTO)
+                console.log(`update request received with params: `, JSON.stringify({ ...event.body, user_id: authorizer.principalId }))
+                validatedInput = validate({ ...event.body, user_id: authorizer.principalId }, updateDTO)
                 result = await update(validatedInput)
                 return responseDTO(200, result)
             case 'DELETE':
-                console.log(`delete request received with params: `, JSON.stringify({ ...event.queryStringParameters, userId: authorizer.principalId }))
-                validatedInput = validate({ ...event.queryStringParameters, userId: authorizer.principalId }, removeDTO)
-                result = await remove({ ...event.queryStringParameters, userId: authorizer.principalId })
+                console.log(`delete request received with params: `, JSON.stringify({ ...event.queryStringParameters, user_id: authorizer.principalId }))
+                validatedInput = validate({ ...event.queryStringParameters, user_id: authorizer.principalId }, removeDTO)
+                result = await remove({ ...event.queryStringParameters, user_id: authorizer.principalId })
                 return responseDTO(200, result)
             default:
                 return responseDTO(405, 'Method not allowed')
