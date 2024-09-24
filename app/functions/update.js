@@ -11,7 +11,7 @@ const update = async (input) => {
   const values = [title, description, id, new Date(), status, category_id, user_id];
   const result = await db.query(query, values);
   await db.end()
-  return result.rows[0]?.id
+  return result?.rows[0]?.id
 }
 module.exports = {
   update

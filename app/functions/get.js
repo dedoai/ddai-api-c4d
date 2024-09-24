@@ -29,7 +29,7 @@ const get = async (input) => {
         result = await db.query(query, params)
     }
     await db.end();
-    return id ? result.rows.pop() : result.rows
+    return id ? result?.rows?.pop() : result.rows
 }
 
 module.exports = {

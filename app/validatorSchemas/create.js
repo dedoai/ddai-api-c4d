@@ -6,7 +6,7 @@ const createDTO = Joi.object({
     description: Joi.string().optional(),
     data_type: Joi.string().required(),
     status: Joi.string().valid('open', 'closed').default('open')
-}).not(null)
+}).required().not(null)
 
 module.exports = {
     createDTO

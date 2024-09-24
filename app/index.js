@@ -10,11 +10,13 @@ const { updateDTO } = require('./validatorSchemas/update')
 const { getDTO } = require('./validatorSchemas/get')
 const { removeDTO } = require('./validatorSchemas/remove')
 exports.handler = async (event) => {
-
-    const { httpMethod, authorizer } = event.requestContext
-    let result;
-    let validatedInput;
     try {
+        let result;
+        let validatedInput;
+        const { httpMethod, authorizer } = event.requestContext
+        if (!authorizer?.principalId) {
+            throw new ApplicationError('Unauthorized', 401)
+        }
         switch (httpMethod) {
             case 'GET':
                 console.log(`get request received with params: `, JSON.stringify({ ...event.queryStringParameters, user_id: authorizer.principalId }))

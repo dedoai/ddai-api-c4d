@@ -6,7 +6,7 @@ const updateDTO = Joi.object({
     description: Joi.string().optional(),
     status: Joi.string().valid('open', 'closed').optional(),
     category_id: Joi.string().guid().optional(),
-}).not(null);
+}).required().not(null);
 module.exports = {
     updateDTO
 }

@@ -10,7 +10,7 @@ const create = async (input) => {
   const values = [user_id, title, description, data_type, status, category_id];
   const c4d = await db.query(query, values);
   await db.end()
-  return c4d.rows[0]?.id
+  return c4d?.rows[0]?.id
 }
 module.exports = {
   create
