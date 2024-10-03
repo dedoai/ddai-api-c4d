@@ -36,6 +36,6 @@ const get = async (input) => {
 module.exports = {
   fn: get,
   method: 'GET',
-  path: 'c4d',
+  path: '/v1/c4d',
   schema: getDTO
 };
