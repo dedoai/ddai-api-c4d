@@ -1,31 +1,19 @@
-/**
-  {
-    "GET@path":functionName
-  }
-*/
-
-// leggo tutti file js
 const fs = require('fs');
 const path = require('path');
 
-// Specifica la directory che contiene i file
-const directoryPath = __dirname; // Oppure il percorso relativo/assoluto della directory
+const root = __dirname
+const modules = fs.readdirSync(root).filter(f => f !== 'index.js');
 
-// Leggi tutti i file della directory in modo sincrono
-const files = fs.readdirSync(directoryPath);
+console.log('Modules found :', modules.join(', '));
+var moduleMap = {};
 
-// Filtra i file con estensione .js escludendo 'index.js'
-const jsFiles = files.filter(file => file.endsWith('.js') && file !== 'index.js');
-var MAP = {};
-
-console.log('File trovati:', jsFiles);
-var obj;
-// Ora puoi fare qualsiasi cosa con i file trovati
-jsFiles.forEach(file => {
-  const filePath = path.join(directoryPath, file);
-  console.log(`File: ${filePath}`);
-  obj = require(filePath);
-  MAP[obj.method + '@' + obj.path] = obj;
-  // Se necessario, puoi importare i file dinamicamente
+modules.forEach(m => {
+  const moduleIndex = path.join(root, m, 'index.js');
+  console.log(`Loading module: ${m}`);
+  const module = require(moduleIndex);
+  moduleMap[module.verb + '@' + module.path] = {
+    action: module.action,
+    validatorSchema: module.validatorSchema
+  }
 });
-module.exports = MAP;
+module.exports = { modules: moduleMap };

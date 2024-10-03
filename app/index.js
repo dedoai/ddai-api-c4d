@@ -1,4 +1,4 @@
-const fnMap = require('./functions');
+const { modules } = require('./functions');
 const DEBUG = process.env.DEBUG || false;
 const { responseDTO } = require('./utils')
 const ApplicationError = require('./ApplicationError')
@@ -6,21 +6,26 @@ const { validate } = require('./validator')
 
 exports.handler = async (event) => {
   try {
-    let { requestContext, body, queryStringParameters } = event ?? {};
-    let { httpMethod, authorizer, resourcePath } = requestContext ?? {};
-    let fnKey = httpMethod + '@' + resourcePath;
-    let fnDef = fnMap[fnKey];
-    if (fnDef !== undefined) {
-      if (DEBUG)
-        console.log(`get request received with params: `, JSON.stringify({ ...(body || queryStringParameters), user_id: authorizer?.principal }));
-      let validatedInput = validate({ ...(body || queryStringParameters), user_id: authorizer?.principalId }, fnDef.schema)
-      if( DEBUG )
-	console.log(`validatedInput `, validatedInput);
-      return responseDTO(200, await fnDef.fn(validatedInput));
-    } else {
-      // return 405 Method not Allowed
+    const { requestContext, body, queryStringParameters } = event ?? {};
+    const { httpMethod, authorizer, resourcePath } = requestContext ?? {};
+    const key = httpMethod + '@' + resourcePath;
+    const requestedModule = modules[key];
+
+    if (!requestedModule) {
       return responseDTO(405, 'Method not allowed')
     }
+    if (DEBUG)
+      console.log(`get request received with params: `, JSON.stringify({ ...(body || queryStringParameters), user_id: authorizer?.principal }));
+    const input = { ...(body || queryStringParameters) };
+
+    if (authorizer?.principalId)
+      input.user_id = authorizer?.principalId;
+
+    const validatedInput = validate(input, requestedModule.validatorSchema);
+    if (DEBUG)
+      console.log(`validatedInput `, validatedInput);
+    return responseDTO(200, await requestedModule.action(validatedInput));
+
   }
   catch (err) {
     console.log('----------------------EXCEPTION OCCURRED----------------------')
