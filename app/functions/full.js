@@ -1,7 +1,7 @@
 const { getDbConnection } = require('../db')
 const { ENTITY_NAME } = require('../constants')
 const { getDTO } = require('../validatorSchemas/get')
-
+const DEBUG = process.env.DEBUG || false;
 const full = async (id, user_id) => {
   let result;
   const db = await getDbConnection()
@@ -25,11 +25,10 @@ const full = async (id, user_id) => {
   if (id) {
     params.push(id)
     query += ` AND ${ENTITY_NAME}.id = $2`
-    result = await db.query(query, params)
   }
-  else {
-    result = await db.query(query, params)
-  }
+  if( DEBUG )
+	console.log('Query:', query)
+  result = await db.query(query, params)
   await db.end()
   return id ? result?.rows?.pop() : result.rows
 }
