@@ -3,6 +3,7 @@ const { full } = require('./full')
 const { files } = require('./files')
 const { MAX_LIMIT, MAX_OFFSET } = require('../utils')
 const { ENTITY_NAME } = require('../constants')
+const { getDTO } = require('../validatorSchemas/get')
 
 const get = async (input) => {
     let result;
@@ -33,5 +34,8 @@ const get = async (input) => {
 }
 
 module.exports = {
-    get
-}
+  fn            : get,
+  method        : 'GET',
+  path          : 'c4d',
+  schema	: getDTO
+};

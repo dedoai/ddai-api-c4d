@@ -1,5 +1,6 @@
 const { getDbConnection } = require('../db')
 const { ENTITY_NAME } = require('../constants')
+const { createDTO } = require('../validatorSchemas/create')
 const create = async (input) => {
   const { user_id, title, description, data_type, status, category_id } = input;
   const db = await getDbConnection()
@@ -12,6 +13,10 @@ const create = async (input) => {
   await db.end()
   return c4d?.rows[0]?.id
 }
+
 module.exports = {
-  create
+  fn 		: create,
+  method	: 'GET',
+  path		: 'c4d',
+  schema        : createDTO
 };

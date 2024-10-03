@@ -1,5 +1,6 @@
 const { getDbConnection } = require('../db')
 const { ENTITY_NAME } = require('../constants')
+const { removeDTO } = require('../validatorSchemas/remove')
 
 const remove = async (input) => {
   const { id, user_id } = input;
@@ -11,5 +12,8 @@ const remove = async (input) => {
 }
 
 module.exports = {
-  remove
+  fn:remove,
+  method:'DELETE',
+  path:'c4d',
+  schema: removeDTO
 };

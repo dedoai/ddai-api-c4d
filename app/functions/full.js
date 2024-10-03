@@ -1,5 +1,7 @@
 const { getDbConnection } = require('../db')
 const { ENTITY_NAME } = require('../constants')
+const { getDTO } = require('../validatorSchemas/get')
+
 const full = async (id, user_id) => {
     let result;
     const db = await getDbConnection()
@@ -33,5 +35,8 @@ const full = async (id, user_id) => {
 }
 
 module.exports = {
-    full
-}
+  fn            : full,
+  method        : 'GET',
+  path          : 'c4d/public',
+  schema	: getDTO
+};

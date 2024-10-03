@@ -1,5 +1,6 @@
 const { getDbConnection } = require('../db')
 const { ENTITY_NAME } = require('../constants')
+const { updateDTO } = require('../validatorSchemas/update')
 const update = async (input) => {
   const { title, description, id, status, category_id, user_id } = input;
   const db = await getDbConnection()
@@ -14,5 +15,9 @@ const update = async (input) => {
   return result?.rows[0]?.id
 }
 module.exports = {
-  update
+  fn:update,
+  method:'PUT',
+  path:'c4d',
+  schema: updateDTO
 };
+
