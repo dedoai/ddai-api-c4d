@@ -5,6 +5,7 @@
 */
 
 // leggo tutti file js
+const fs = require('fs');
 const path = require('path');
 
 // Specifica la directory che contiene i file
