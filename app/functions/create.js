@@ -17,6 +17,6 @@ const create = async (input) => {
 module.exports = {
   fn: create,
   method: 'GET',
-  path: 'c4d',
+  path: '/v1/c4d',
   schema: createDTO
 };

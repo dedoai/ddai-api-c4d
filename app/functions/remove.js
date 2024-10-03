@@ -14,6 +14,6 @@ const remove = async (input) => {
 module.exports = {
   fn: remove,
   method: 'DELETE',
-  path: 'c4d',
+  path: '/v1/c4d',
   schema: removeDTO
 };

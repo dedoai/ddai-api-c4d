@@ -17,7 +17,7 @@ const update = async (input) => {
 module.exports = {
   fn: update,
   method: 'PUT',
-  path: 'c4d',
+  path: '/v1/c4d',
   schema: updateDTO
 };
 

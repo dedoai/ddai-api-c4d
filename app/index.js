@@ -12,7 +12,7 @@ exports.handler = async (event) => {
     let fnDef = fnMap[fnKey];
     if (fnDef !== undefined) {
       if (DEBUG)
-        console.log(`get request received with params: `, JSON.stringify({ ...(body || queryStringParameters), user_id: authorizer?.principal >}));
+        console.log(`get request received with params: `, JSON.stringify({ ...(body || queryStringParameters), user_id: authorizer?.principal }));
       let validatedInput = validate({ ...(body || queryStringParameters), user_id: authorizer?.principalId }, fnDef.schema)
       return responseDTO(200, await fnDef.fn(validatedInput));
     } else {

@@ -37,6 +37,6 @@ const full = async (id, user_id) => {
 module.exports = {
   fn: full,
   method: 'GET',
-  path: 'c4d/public',
+  path: '/v1/c4d/public',
   schema: getDTO
 };
