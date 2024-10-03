@@ -9,7 +9,7 @@ const full = async ( input ) => {
   const db = await getDbConnection()
   const params = [user_id]
   let query = `SELECT
-        ${ENTITY_NAME}.title, 
+        ${ENTITY_NAME}.title,
         ${ENTITY_NAME}.description,
         ${ENTITY_NAME}.data_type,
         ${ENTITY_NAME}.reward,
@@ -21,13 +21,9 @@ const full = async ( input ) => {
         cat.name as category,
         us.username as owner
         FROM public.${ENTITY_NAME} ${ENTITY_NAME}
-        inner join categories cat on ${ENTITY_NAME}.category_id = cat.id 
-        inner join users us on ${ENTITY_NAME}.user_id = us.id WHERE ${ENTITY_NAME}.user_id = $1`
+        inner join categories cat on ${ENTITY_NAME}.category_id = cat.id
+        inner join users user on ${ENTITY_NAME}.user_id = user.id`
 
-  if (id) {
-    params.push(id)
-    query += ` AND ${ENTITY_NAME}.id = $2`
-  }
   if( DEBUG )
 	console.log('Query:', query)
   result = await db.query(query, params)

@@ -7,6 +7,7 @@ const { getDTO } = require('../validatorSchemas/get')
 
 const get = async (input) => {
   let result;
+  let full = input.full;
   const params = [input.user_id]
   const id = input?.id
   if (input?.full) {
