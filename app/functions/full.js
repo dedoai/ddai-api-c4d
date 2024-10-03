@@ -20,7 +20,7 @@ const full = async (id, user_id) => {
         us.username as owner
         FROM public.${ENTITY_NAME} ${ENTITY_NAME}
         inner join categories cat on ${ENTITY_NAME}.category_id = cat.id 
-        inner join users us on ${ENTITY_NAME}.consumer_id = us.id WHERE ${ENTITY_NAME}.user_id = $1`
+        inner join users us on ${ENTITY_NAME}.user_id = us.id WHERE ${ENTITY_NAME}.user_id = $1`
 
   if (id) {
     params.push(id)
