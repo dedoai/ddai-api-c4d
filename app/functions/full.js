@@ -2,7 +2,9 @@ const { getDbConnection } = require('../db')
 const { ENTITY_NAME } = require('../constants')
 const { getDTO } = require('../validatorSchemas/get')
 const DEBUG = process.env.DEBUG || false;
-const full = async (id, user_id) => {
+const full = async ( input ) => {
+  let id 	= input.id;
+  let user_id   = input.user_id;
   let result;
   const db = await getDbConnection()
   const params = [user_id]

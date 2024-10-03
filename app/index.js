@@ -14,6 +14,8 @@ exports.handler = async (event) => {
       if (DEBUG)
         console.log(`get request received with params: `, JSON.stringify({ ...(body || queryStringParameters), user_id: authorizer?.principal }));
       let validatedInput = validate({ ...(body || queryStringParameters), user_id: authorizer?.principalId }, fnDef.schema)
+      if( DEBUG )
+	console.log(`validatedInput `, validatedInput);
       return responseDTO(200, await fnDef.fn(validatedInput));
     } else {
       // return 405 Method not Allowed
