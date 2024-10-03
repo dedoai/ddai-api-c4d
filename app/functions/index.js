@@ -1,7 +1,7 @@
 /**
-	{
-		"GET@path":functionName
-	}
+  {
+    "GET@path":functionName
+  }
 */
 
 // leggo tutti file js
@@ -23,8 +23,8 @@ var obj;
 jsFiles.forEach(file => {
   const filePath = path.join(directoryPath, file);
   console.log(`File: ${filePath}`);
-  obj=require(filePath);
-  MAP[obj.method+'@'+obj.path] = obj.fn;
+  obj = require(filePath);
+  MAP[obj.method + '@' + obj.path] = obj.fn;
   // Se necessario, puoi importare i file dinamicamente
 });
 module.exports = MAP;

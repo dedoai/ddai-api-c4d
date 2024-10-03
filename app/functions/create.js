@@ -15,8 +15,8 @@ const create = async (input) => {
 }
 
 module.exports = {
-  fn 		: create,
-  method	: 'GET',
-  path		: 'c4d',
-  schema        : createDTO
+  fn: create,
+  method: 'GET',
+  path: 'c4d',
+  schema: createDTO
 };

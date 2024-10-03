@@ -15,9 +15,9 @@ const update = async (input) => {
   return result?.rows[0]?.id
 }
 module.exports = {
-  fn:update,
-  method:'PUT',
-  path:'c4d',
+  fn: update,
+  method: 'PUT',
+  path: 'c4d',
   schema: updateDTO
 };
 
