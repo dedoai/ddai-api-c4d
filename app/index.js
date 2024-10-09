@@ -1,6 +1,6 @@
 const { modules } = require('./functions');
 const DEBUG = process.env.DEBUG || false;
-const { responseDTO } = require('./utils')
+const { manageResponse } = require('./utils')
 const ApplicationError = require('./ApplicationError')
 const { validate } = require('./validator')
 
@@ -12,7 +12,7 @@ exports.handler = async (event) => {
     const requestedModule = modules[key];
 
     if (!requestedModule) {
-      return responseDTO(405, 'Method not allowed')
+      return manageResponse(405, 'Method not allowed')
     }
     if (DEBUG)
       console.log(`get request received with params: `, JSON.stringify({ ...(body || queryStringParameters), user_id: authorizer?.principal }));
@@ -24,7 +24,7 @@ exports.handler = async (event) => {
     const validatedInput = validate(input, requestedModule.validatorSchema);
     if (DEBUG)
       console.log(`validatedInput `, validatedInput);
-    return responseDTO(200, await requestedModule.action(validatedInput));
+    return manageResponse(200, await requestedModule.action(validatedInput))
 
   }
   catch (err) {
@@ -33,9 +33,9 @@ exports.handler = async (event) => {
     console.log(err.message)
     console.log('----------------------EXCEPTION END---------------------------')
     if (err instanceof ApplicationError) {
-      return responseDTO(err.statusCode, err.message)
+      return manageResponse(err.statusCode, err.message)
     }
     else
-      return responseDTO(500, 'Internal Server Error')
+      return manageResponse(500, 'Internal Server Error')
   }
 }
