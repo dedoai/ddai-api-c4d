@@ -3,14 +3,9 @@ const {
   GetSecretValueCommand,
 } = require('@aws-sdk/client-secrets-manager')
 const ld = require('lodash')
-const { CORS_HEADERS } = require('./constants')
-
+const { CORS_HEADERS, ERRORS } = require('./constants')
 const client = new SecretsManagerClient();
-const ERRORS = {
-  400: { code: 'BAD_REQUEST' },
-  405: { code: 'METHOD_NOT_ALLOWED', message: 'Method Not Allowed' },
-  500: { code: 'INTERNAL_SERVER_ERROR', message: 'Internal Server Error' }
-}
+
 
 const manageResponse = (statusCode, body, headers) => {
   return statusCode == 200 ? {
