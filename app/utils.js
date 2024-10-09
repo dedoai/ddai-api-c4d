@@ -2,7 +2,9 @@ const {
   SecretsManagerClient,
   GetSecretValueCommand,
 } = require('@aws-sdk/client-secrets-manager')
+const ld = require('lodash')
 const { CORS_HEADERS } = require('./constants')
+
 const client = new SecretsManagerClient();
 const ERRORS = {
   400: { code: 'BAD_REQUEST' },
@@ -38,7 +40,19 @@ const getDbSecretPwd = async () => {
   return JSON.parse(response?.SecretString).password
 }
 
+const transformInput = (input, format) => {
+
+  const fn = ld[format]
+  if (!fn) throw new Error('Invalid transformation format')
+
+  return input ? Object.keys(input).reduce((acc, key) => {
+    acc[fn(key)] = input[key]
+    return acc
+  }, {}) : {}
+}
+
 module.exports = {
   manageResponse,
-  getDbSecretPwd
+  getDbSecretPwd,
+  transformInput
 }

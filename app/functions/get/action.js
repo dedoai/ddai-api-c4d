@@ -8,12 +8,12 @@ const action = async (input) => {
         ${ENTITY_NAME}.title,
         ${ENTITY_NAME}.description,
         ${ENTITY_NAME}.data_type,
-        ${ENTITY_NAME}.reward,
+        ${ENTITY_NAME}.reward::numeric as reward,
         ${ENTITY_NAME}.status,
         ${ENTITY_NAME}.created_at,
         ${ENTITY_NAME}.updated_at,
         ${ENTITY_NAME}.id,
-        ${ENTITY_NAME}.likes,
+        ${ENTITY_NAME}.likes::numeric as likes,
         cat.name as category,
         usr.username as owner
         FROM public.${ENTITY_NAME} ${ENTITY_NAME}

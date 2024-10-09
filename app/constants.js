@@ -3,6 +3,7 @@ const DEFAULT_LIMIT = 20;
 const MAX_OFFSET = 100000;
 const DEFAULT_OFFSET = 0;
 const ENTITY_NAME = 'c4d';
+const TRANSFORM_FORMATS = { snake: 'snakeCase', camel: 'camelCase' }
 const CORS_HEADERS = {
   "Access-Control-Allow-Headers": "Content-Type",
   "Access-Control-Allow-Origin": "*",
@@ -15,5 +16,6 @@ module.exports = {
   ENTITY_NAME,
   CORS_HEADERS,
   DEFAULT_LIMIT,
-  DEFAULT_OFFSET
+  DEFAULT_OFFSET,
+  TRANSFORM_FORMATS
 }

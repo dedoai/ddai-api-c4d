@@ -1,6 +1,7 @@
 const { modules } = require('./functions');
 const DEBUG = process.env.DEBUG || false;
-const { manageResponse } = require('./utils')
+const { manageResponse, transformInput } = require('./utils')
+const { TRANSFORM_FORMATS } = require('./constants')
 const ApplicationError = require('./ApplicationError')
 const { validate } = require('./validator')
 
@@ -16,15 +17,18 @@ exports.handler = async (event) => {
     }
     if (DEBUG)
       console.log(`get request received with params: `, JSON.stringify({ ...(body || queryStringParameters), user_id: authorizer?.principal }));
+
     const input = { ...(body || queryStringParameters) };
 
     if (authorizer?.principalId)
       input.user_id = authorizer?.principalId;
 
-    const validatedInput = validate(input, requestedModule.validatorSchema);
+    const validatedInput = validate(transformInput(input, TRANSFORM_FORMATS.snake), requestedModule.validatorSchema)
     if (DEBUG)
       console.log(`validatedInput `, validatedInput);
-    return manageResponse(200, await requestedModule.action(validatedInput))
+
+    const response = await requestedModule.action(validatedInput)
+    return manageResponse(200, transformInput(response, TRANSFORM_FORMATS.camel))
 
   }
   catch (err) {
