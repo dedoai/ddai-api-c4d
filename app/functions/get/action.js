@@ -35,10 +35,10 @@ const action = async (input) => {
   await db.end();
 
   const rows = result.rows;
-  const totalCount = rows.length > 0 ? parseInt(rows[0].total_count, 10) : 0;
+  const totalResults = rows.length > 0 ? parseInt(rows[0].total_count, 10) : 0;
 
   return {
-    totalResults: totalCount,
+    totalResults,
     records: id ? rows.pop() : rows
   };
 };
