@@ -42,12 +42,16 @@ const transformInput = (input, format) => {
 
   return input ?
     Array.isArray(input) ?
-      input.map(obj => ld.transform(obj, (acc, val, key) => { acc[fn(key)] = val }, {})) :
-      Object.keys(input).reduce((acc, key) => {
-        acc[fn(key)] = input[key]
-        return acc
-      }, {}) :
+      input.map(obj => remapKeys(obj, fn)) :
+      remapKeys(input, fn) :
     {}
+}
+
+const remapKeys = (obj, fn) => {
+  return Object.keys(obj).reduce((acc, key) => {
+    acc[fn[key]] = obj[key]
+    return acc
+  }, {})
 }
 
 module.exports = {
