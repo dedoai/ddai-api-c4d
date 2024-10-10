@@ -6,7 +6,7 @@ const action = async (input) => {
   const { entity_id, user_id, limit, offset } = input
   const params = [ENTITY_NAME, user_id]
 
-  let query = `SELECT file_name,file_type,bucket_url FROM files WHERE entity_name = $1 and user_id=$2`
+  let query = `SELECT file_name,file_type,bucket_url,COUNT(*) OVER() AS total_count FROM files WHERE entity_name = $1 and user_id=$2`
 
   if (entity_id) {
     query += ` and entity_id=$3 OFFSET $4 LIMIT $5`
@@ -19,7 +19,13 @@ const action = async (input) => {
   const db = await getDbConnection()
   const result = await db.query(query, params)
   await db.end();
-  return result?.rows?.length > 1 ? result.rows : result?.rows?.pop()
+  const rows = result.rows;
+  const totalCount = rows.length > 0 ? parseInt(rows[0].total_count, 10) : 0;
+
+  return {
+    totalResults: totalCount,
+    records: id ? rows.pop() : rows
+  };
 }
 
 module.exports = { action };

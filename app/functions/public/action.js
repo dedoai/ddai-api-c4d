@@ -15,7 +15,8 @@ const action = async (input) => {
         ${ENTITY_NAME}.id,
         ${ENTITY_NAME}.likes::numeric as likes,
         cat.name as category,
-        usr.username as owner
+        usr.username as owner,
+        COUNT(*) OVER() AS total_count
         FROM public.${ENTITY_NAME} ${ENTITY_NAME}
         inner join categories cat on ${ENTITY_NAME}.category_id = cat.id
         inner join users usr on ${ENTITY_NAME}.user_id = usr.id `
@@ -32,7 +33,13 @@ const action = async (input) => {
   const db = await getDbConnection()
   const result = await db.query(query, params)
   await db.end();
-  return id ? result?.rows?.pop() : result.rows
+  const rows = result.rows;
+  const totalCount = rows.length > 0 ? parseInt(rows[0].total_count, 10) : 0;
+
+  return {
+    totalResults: totalCount,
+    records: id ? rows.pop() : rows
+  };
 }
 
 module.exports = { action };

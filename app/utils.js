@@ -8,22 +8,27 @@ const client = new SecretsManagerClient();
 
 
 const manageResponse = (statusCode, body, headers) => {
-  return statusCode == 200 ? {
-    statusCode: statusCode,
-    headers: {
-      ...CORS_HEADERS,
-      ...headers
-    },
-    body: JSON.stringify({ data: body })
-  } : {
-    statusCode: statusCode,
-    errorCode: ERRORS[statusCode].code,
-    description: ERRORS[statusCode].message || body,
-    headers: {
-      ...CORS_HEADERS,
-      ...headers
-    },
-    body: JSON.stringify({ data: null })
+  if (statusCode == 200) {
+    const payload = body.totalResults ? { totalResults: body.totalResults, data: body.records } : body
+    return {
+      statusCode: statusCode,
+      headers: {
+        ...CORS_HEADERS,
+        ...headers
+      },
+      body: JSON.stringify(payload)
+    }
+  } else {
+    return {
+      statusCode: statusCode,
+      errorCode: ERRORS[statusCode].code,
+      description: ERRORS[statusCode].message || body,
+      headers: {
+        ...CORS_HEADERS,
+        ...headers
+      },
+      body: JSON.stringify({ data: null })
+    }
   }
 }
 
@@ -31,7 +36,7 @@ const getDbSecretPwd = async () => {
   const command = new GetSecretValueCommand({ SecretId: process.env.DB_SECRET_PASS_ID })
   const response = await client.send(command);
   if (!response?.SecretString)
-    throw new Error('Failed to get secret ')
+    throw new Error('Failed to get secret')
   return JSON.parse(response?.SecretString).password
 }
 
