@@ -36,7 +36,6 @@ const getDbSecretPwd = async () => {
 }
 
 const transformInput = (input, format) => {
-
   const fn = ld[format]
   if (!fn) throw new Error('Invalid transformation format')
 
@@ -49,7 +48,7 @@ const transformInput = (input, format) => {
 
 const remapKeys = (obj, fn) => {
   return Object.keys(obj).reduce((acc, key) => {
-    acc[fn[key]] = obj[key]
+    acc[fn(key)] = obj[key]
     return acc
   }, {})
 }

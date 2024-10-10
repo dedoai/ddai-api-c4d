@@ -1,4 +1,6 @@
-const { Pool } = require('pg');
+const { Pool, types } = require('pg');
+types.setTypeParser(1700, (val) => parseFloat(val));
+
 const { getDbSecretPwd } = require('./utils')
 
 const getDbConnection = async () => {
