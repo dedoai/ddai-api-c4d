@@ -9,7 +9,7 @@ const client = new SecretsManagerClient();
 
 const manageResponse = (statusCode, body, headers) => {
   if (statusCode == 200) {
-    const payload = body.totalResults ? { totalResults: body.totalResults, data: body.records } : body
+    const payload = body.totalResults ? { totalResults: body.totalResults, data: body.records } : { data: body }
     return {
       statusCode: statusCode,
       headers: {
