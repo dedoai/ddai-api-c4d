@@ -40,10 +40,14 @@ const transformInput = (input, format) => {
   const fn = ld[format]
   if (!fn) throw new Error('Invalid transformation format')
 
-  return input ? Object.keys(input).reduce((acc, key) => {
-    acc[fn(key)] = input[key]
-    return acc
-  }, {}) : {}
+  return input ?
+    Array.isArray(input) ?
+      input.map(obj => ld.transform(obj, (acc, val, key) => { acc[fn(key)] = val }, {})) :
+      Object.keys(input).reduce((acc, key) => {
+        acc[fn(key)] = input[key]
+        return acc
+      }, {}) :
+    {}
 }
 
 module.exports = {
