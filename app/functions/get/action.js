@@ -34,11 +34,15 @@ const action = async (input) => {
   const result = await db.query(query, params);
   await db.end();
 
-  const rows = result.rows;
-  const totalCount = rows.length > 0 ? parseInt(rows[0].total_count, 10) : 0;
+  const totalResults = result.rows.length > 0 ? parseInt(result.rows[0].total_count, 10) : 0;
+  const rows = result.rows.map(row => {
+    delete row.total_count
+    return row
+  });
+
 
   return {
-    totalResults: totalCount,
+    totalResults,
     records: id ? rows.pop() : rows
   };
 };
