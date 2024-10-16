@@ -5,6 +5,9 @@ const schema = Joi.object({
     title: Joi.string().required(),
     description: Joi.string().optional(),
     data_type: Joi.string().required(),
+    telegram_topic: Joi.string().optional(),
+    dataset_price: Joi.number().optional(),
+    dataset_limit: Joi.number().optional(),
     status: Joi.string().valid('open', 'closed').default('open')
 }).required().not(null)
 
